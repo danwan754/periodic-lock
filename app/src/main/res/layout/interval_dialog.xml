@@ -1,0 +1,63 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_interval">
+
+
+    <TextView
+        android:id="@+id/time_interval_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:fontFamily="serif"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Edit Time Interval"
+        android:textSize="35sp" />
+
+
+    <EditText
+        android:id="@+id/time_value_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/edit_text_interval"
+        android:gravity="center"
+        android:inputType="text"
+        android:textSize="30sp" />
+
+        <Spinner
+            android:id="@+id/unit_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="right"
+        android:paddingBottom="5dp">
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="5dp"
+            android:text="Cancel" />
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="10dp"
+            android:text="Done" />
+    </LinearLayout>
+
+</LinearLayout>

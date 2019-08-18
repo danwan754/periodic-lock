@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/aboutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="8dp"
+        android:onClick="startService"
+        android:text="About" />
+
+    <TextView
+        android:id="@+id/IntervalTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="12dp"
+        android:text="Interval"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/intervalButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="56dp"
+        android:onClick="showIntervalDialog"
+        android:text="1 minute" />
+
+    <Switch
+        android:id="@+id/enableSwitch"
+        android:layout_width="51dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="180dp"
+        android:checked="false"
+        android:saveEnabled="false"
+        android:textOff="OFF"
+        android:textOn="ON" />
+
+</LinearLayout>
