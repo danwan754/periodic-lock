@@ -29,7 +29,9 @@ public class MainActivity extends AppCompatActivity {
 
 //    private static Boolean enable = false;
     String timeUnit = "Minutes";
-    int timeValue = 0;
+    // timeValue may be in seconds or minutes
+    int timeValue = 1;
+    int timeValueSeconds = 60;
     public static final int RESULT_ENABLE = 11;
     DevicePolicyManager devicePolicyManager;
     ActivityManager activityManager;
@@ -56,10 +58,15 @@ public class MainActivity extends AppCompatActivity {
 //                enable = isChecked;
                 boolean active = devicePolicyManager.isAdminActive(compName);
                 if (active && isChecked) {
-                    devicePolicyManager.lockNow();
+//                    devicePolicyManager.lockNow();
+                    startService();
                 } else if (isChecked && !active){
                     Toast.makeText(MainActivity.this, "Problem to enable the Admin Device features", Toast.LENGTH_SHORT).show();
                     getLockPermissions();
+                    startService();
+                }
+                else {
+                    stopService();
                 }
             }
         });
@@ -67,15 +74,16 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public void startService(View v) {
+    public void startService() {
 
         Intent serviceIntent = new Intent(this, PeriodicLockService.class);
-        serviceIntent.putExtra("inputExtra", "TESTING");
+//        serviceIntent.putExtra("inputExtra", "TESTING");
+        serviceIntent.putExtra("timeValue", timeValueSeconds);
 
         ContextCompat.startForegroundService(this, serviceIntent);
     }
 
-    public void stopService(View v) {
+    public void stopService() {
         Intent serviceIntent = new Intent(this, PeriodicLockService.class);
         stopService(serviceIntent);
     }
@@ -132,8 +140,28 @@ public class MainActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timeValue = Integer.parseInt(timeValueEditText.getText().toString());
+
+                String timeValueString = timeValueEditText.getText().toString();
+
+                if (timeValueString.equals("")) {
+                    if (timeUnit.equals("Seconds")) {
+                        // minimal of 20 seconds if time unit is in seconds
+                        timeValue = 20;
+                        timeValueSeconds = 20;
+                    }
+                    else {
+                        // minimal of 1 minute of time unit is in minutes
+                        timeValue = 1;
+                        timeValueSeconds = 60;
+                    }
+                }
+                timeValue = Integer.parseInt(timeValueString);
                 intervalButton.setText(timeValue + " " + timeUnit);
+
+                if (timeUnit == "Minutes") {
+                    timeValueSeconds = timeValue * 60;
+                }
+
 
                 // update database to save timeValue and timeUnit
 
@@ -147,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        boolean isActive = devicePolicyManager.isAdminActive(compName);
+//        boolean isActive = devicePolicyManager.isAdminActive(compName);
 
     }
 
