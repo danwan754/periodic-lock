@@ -8,16 +8,6 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/aboutButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="8dp"
-        android:onClick="startService"
-        android:text="About" />
-
     <TextView
         android:id="@+id/IntervalTextView"
         android:layout_width="wrap_content"

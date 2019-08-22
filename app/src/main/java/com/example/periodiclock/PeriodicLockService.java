@@ -30,7 +30,7 @@ public class PeriodicLockService extends Service {
     private Runnable runnable;
     private Handler handler;
     private ScreenReceiver screenReceiver;
-//    private final String title = "Example Title";
+    private final String notiContent = "Tap to disable screen locking.";
 
     // timeValue is in milliseconds
     private int timeValue;
@@ -58,29 +58,28 @@ public class PeriodicLockService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("onStart", "onStart");
+
         // first time starting service which is called by MainActivity
         if (intent.getBooleanExtra("mainCall", false)) {
-            Log.d("mainCall", "mainCall");
+//            Log.d("mainCall", "mainCall");
 
             // the timeValue extra is in seconds which is converted to milliseconds
             this.timeValue = intent.getIntExtra("timeValue", 0) * 1000;
-            Log.d("timeValue", "time: " + timeValue);
+//            Log.d("timeValue", "time: " + timeValue);
 
             Intent notificationIntent = new Intent(this, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this,
                     0, notificationIntent, 0);
 
             String title = createNotifyContent(timeValue);
-            String content = "Tap to disable screen locking.";
 
-            notification = createNotification(title, content, pendingIntent);
+            notification = createNotification(title, notiContent, pendingIntent);
             startForeground(1, notification);
             handler.postDelayed(runnable, timeValue);
         }
         else {
-            Log.d("elseCall", "elseCall");
-            Log.d("timeValue", "time: " + timeValue);
+//            Log.d("elseCall", "elseCall");
+//            Log.d("timeValue", "time: " + timeValue);
             cancelLockCountDown();
             String title = createNotifyContent(timeValue);
             updateNotification(title);

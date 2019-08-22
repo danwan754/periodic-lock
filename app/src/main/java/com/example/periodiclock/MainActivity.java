@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 
         Switch enableSwitch = findViewById(R.id.enableSwitch);
-        Button aboutButton = findViewById(R.id.aboutButton);
+//        Button aboutButton = findViewById(R.id.aboutButton);
         Button intervalButton = findViewById(R.id.intervalButton);
 
         enableSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
