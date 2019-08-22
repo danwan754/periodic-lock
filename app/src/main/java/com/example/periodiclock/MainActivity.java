@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+//import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     public void startService() {
 
         Intent serviceIntent = new Intent(this, PeriodicLockService.class);
-//        serviceIntent.putExtra("inputExtra", "TESTING");
+        serviceIntent.putExtra("mainCall", true);
         serviceIntent.putExtra("timeValue", timeValueSeconds);
 
         ContextCompat.startForegroundService(this, serviceIntent);
@@ -155,12 +156,16 @@ public class MainActivity extends AppCompatActivity {
                         timeValueSeconds = 60;
                     }
                 }
-                timeValue = Integer.parseInt(timeValueString);
-                intervalButton.setText(timeValue + " " + timeUnit);
+                else {
+                    timeValue = Integer.parseInt(timeValueString);
 
-                if (timeUnit == "Minutes") {
-                    timeValueSeconds = timeValue * 60;
+                    if (timeUnit == "Minutes") {
+                        timeValueSeconds = timeValue * 60;
+                    } else {
+                        timeValueSeconds = timeValue;
+                    }
                 }
+                intervalButton.setText(timeValue + " " + timeUnit);
 
 
                 // update database to save timeValue and timeUnit
@@ -213,7 +218,5 @@ public class MainActivity extends AppCompatActivity {
         final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
-
-
 
 }
