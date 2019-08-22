@@ -54,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
 //        Button aboutButton = findViewById(R.id.aboutButton);
         Button intervalButton = findViewById(R.id.intervalButton);
 
+        Intent intent = getIntent();
+        if (intent.getBooleanExtra("fromService", false)) {
+            enableSwitch.setChecked(true);
+        }
+
         enableSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
             public void onCheckedChanged (CompoundButton buttonView, boolean isChecked) {
 //                enable = isChecked;

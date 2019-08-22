@@ -68,6 +68,7 @@ public class PeriodicLockService extends Service {
 //            Log.d("timeValue", "time: " + timeValue);
 
             Intent notificationIntent = new Intent(this, MainActivity.class);
+            notificationIntent.putExtra("fromService", true);
             PendingIntent pendingIntent = PendingIntent.getActivity(this,
                     0, notificationIntent, 0);
 
