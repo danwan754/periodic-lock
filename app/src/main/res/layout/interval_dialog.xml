@@ -26,7 +26,7 @@
         android:layout_margin="10dp"
         android:background="@drawable/edit_text_interval"
         android:gravity="center"
-        android:inputType="text"
+        android:inputType="number"
         android:textSize="30sp" />
 
         <Spinner

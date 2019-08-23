@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 //import android.util.Log;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -31,9 +34,10 @@ public class MainActivity extends AppCompatActivity {
 //    private static Boolean enable = false;
     String timeUnit = "Minutes";
     // timeValue may be in seconds or minutes
-    int timeValue = 1;
-    int timeValueSeconds = 60;
+    int timeValue;
+    int timeValueSeconds;
     public static final int RESULT_ENABLE = 11;
+    private SharedPreferences sharedPref;
     DevicePolicyManager devicePolicyManager;
     ActivityManager activityManager;
     ComponentName compName;
@@ -44,15 +48,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        MyDB = new DBHelper(this);
+        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        timeValue = sharedPref.getInt(getString(R.string.time_value), 60);
+        timeValueSeconds = sharedPref.getInt(getString(R.string.time_value_seconds), 60);
+        timeUnit = sharedPref.getString(getString(R.string.time_unit), "Seconds");
+
+        Log.d("time", "timeValue: " + timeValue);
+        Log.d("time", "timeValueSeconds: " + timeValueSeconds);
+        Log.d("time", "timeUnit: " + timeUnit);
 
         compName = new ComponentName(this, MyAdmin.class);
         devicePolicyManager = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
         activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 
-        Switch enableSwitch = findViewById(R.id.enableSwitch);
-//        Button aboutButton = findViewById(R.id.aboutButton);
+        final Switch enableSwitch = findViewById(R.id.enableSwitch);
         Button intervalButton = findViewById(R.id.intervalButton);
+
+        intervalButton.setText(timeValue + " " + timeUnit);
 
         Intent intent = getIntent();
         if (intent.getBooleanExtra("fromService", false)) {
@@ -67,9 +79,13 @@ public class MainActivity extends AppCompatActivity {
 //                    devicePolicyManager.lockNow();
                     startService();
                 } else if (isChecked && !active){
-                    Toast.makeText(MainActivity.this, "Problem to enable the Admin Device features", Toast.LENGTH_SHORT).show();
                     getLockPermissions();
-                    startService();
+                    if (active) {
+                        startService();
+                    }
+                    else {
+                        enableSwitch.setChecked(false);
+                    }
                 }
                 else {
                     stopService();
@@ -173,7 +189,12 @@ public class MainActivity extends AppCompatActivity {
                 intervalButton.setText(timeValue + " " + timeUnit);
 
 
-                // update database to save timeValue and timeUnit
+                // store timeValue and timeUnit in sharedPreferences
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(getString(R.string.time_unit), timeUnit);
+                editor.putInt(getString(R.string.time_value), timeValue);
+                editor.putInt(getString(R.string.time_value_seconds), timeValueSeconds);
+                editor.commit();
 
                 dialog.dismiss();
             }
@@ -193,30 +214,22 @@ public class MainActivity extends AppCompatActivity {
     public void getLockPermissions() {
         Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
         intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, compName);
-        intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "Additional text explaining why we need this permission");
+        intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "This app requires locking permission to lock the screen.");
         startActivityForResult(intent, RESULT_ENABLE);
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch(requestCode) {
-            case RESULT_ENABLE :
-                if (resultCode == Activity.RESULT_OK) {
-                    Toast.makeText(MainActivity.this, "You have enabled the Admin Device features", Toast.LENGTH_LONG).show();
-                    activateTimer();
-                } else {
-                    Toast.makeText(MainActivity.this, "Problem to enable the Admin Device features", Toast.LENGTH_LONG).show();
-                }
-                break;
+        if (requestCode == RESULT_ENABLE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Toast.makeText(MainActivity.this, "Granted admin locking permission by user.", Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(MainActivity.this, "Denied admin locking permission by user.", Toast.LENGTH_LONG).show();
+            }
         }
-
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-
-    public void activateTimer() {
-        
     }
 
     public void hideKeyboard(View v) {
