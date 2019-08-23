@@ -31,17 +31,15 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-//    private static Boolean enable = false;
-    String timeUnit = "Minutes";
     // timeValue may be in seconds or minutes
-    int timeValue;
-    int timeValueSeconds;
-    public static final int RESULT_ENABLE = 11;
+    private int timeValue;
+    private int timeValueSeconds;
+    private String timeUnit;
     private SharedPreferences sharedPref;
+    public static final int RESULT_ENABLE = 11;
     DevicePolicyManager devicePolicyManager;
     ActivityManager activityManager;
     ComponentName compName;
-//    DBHelper MyDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +50,9 @@ public class MainActivity extends AppCompatActivity {
         timeValue = sharedPref.getInt(getString(R.string.time_value), 60);
         timeValueSeconds = sharedPref.getInt(getString(R.string.time_value_seconds), 60);
         timeUnit = sharedPref.getString(getString(R.string.time_unit), "Seconds");
-
-        Log.d("time", "timeValue: " + timeValue);
-        Log.d("time", "timeValueSeconds: " + timeValueSeconds);
-        Log.d("time", "timeUnit: " + timeUnit);
+//        Log.d("time", "timeValue: " + timeValue);
+//        Log.d("time", "timeValueSeconds: " + timeValueSeconds);
+//        Log.d("time", "timeUnit: " + timeUnit);
 
         compName = new ComponentName(this, MyAdmin.class);
         devicePolicyManager = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
@@ -73,10 +70,8 @@ public class MainActivity extends AppCompatActivity {
 
         enableSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
             public void onCheckedChanged (CompoundButton buttonView, boolean isChecked) {
-//                enable = isChecked;
                 boolean active = devicePolicyManager.isAdminActive(compName);
                 if (active && isChecked) {
-//                    devicePolicyManager.lockNow();
                     startService();
                 } else if (isChecked && !active){
                     getLockPermissions();
@@ -94,14 +89,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-
     public void startService() {
-
         Intent serviceIntent = new Intent(this, PeriodicLockService.class);
         serviceIntent.putExtra("mainCall", true);
         serviceIntent.putExtra("timeValue", timeValueSeconds);
-
         ContextCompat.startForegroundService(this, serviceIntent);
     }
 
@@ -112,16 +103,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void showIntervalDialog(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        //set the new exercise layout in dialog
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogueLayout = inflater.inflate(R.layout.interval_dialog, null);
         builder.setView(dialogueLayout);
-//
-//        final InputMethodManager imm = (InputMethodManager) this.getSystemService(INPUT_METHOD_SERVICE);
-//        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,InputMethodManager.HIDE_IMPLICIT_ONLY);
 
-//        final TextView timeValueTextView = findViewById(R.id.time_value_edit_text);
         final AlertDialog dialog = builder.show();
         final Spinner unitSpinner = dialogueLayout.findViewById(R.id.unit_spinner);
         final Button intervalButton = findViewById(R.id.intervalButton);
@@ -147,17 +132,16 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setTitle("Edit Time Interval");
 
-        // button closes settings dialog on click
+        // button closes dialog on click
         Button cancelButton = dialogueLayout.findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                imm.hideSoftInputFromWindow(name_editText.getWindowToken(), 0);
                 dialog.cancel();
             }
         });
 
-        // button saves settings dialog on click
+        // button saves user inputs on click
         Button saveButton = dialogueLayout.findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,14 +154,12 @@ public class MainActivity extends AppCompatActivity {
                         // minimal of 20 seconds if time unit is in seconds
                         timeValue = 20;
                         timeValueSeconds = 20;
-                    }
-                    else {
+                    } else {
                         // minimal of 1 minute of time unit is in minutes
                         timeValue = 1;
                         timeValueSeconds = 60;
                     }
-                }
-                else {
+                } else {
                     timeValue = Integer.parseInt(timeValueString);
 
                     if (timeUnit == "Minutes") {
@@ -187,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 intervalButton.setText(timeValue + " " + timeUnit);
-
 
                 // store timeValue and timeUnit in sharedPreferences
                 SharedPreferences.Editor editor = sharedPref.edit();
@@ -201,15 +182,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-
     @Override
     protected void onResume() {
         super.onResume();
-//        boolean isActive = devicePolicyManager.isAdminActive(compName);
-
     }
-
 
     public void getLockPermissions() {
         Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
@@ -218,23 +194,16 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, RESULT_ENABLE);
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RESULT_ENABLE) {
             if (resultCode == Activity.RESULT_OK) {
-                Toast.makeText(MainActivity.this, "Granted admin locking permission by user.", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Granted permission by user.", Toast.LENGTH_LONG).show();
             }
             else {
-                Toast.makeText(MainActivity.this, "Denied admin locking permission by user.", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Denied permission by user.", Toast.LENGTH_LONG).show();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-    public void hideKeyboard(View v) {
-        final InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-    }
-
 }
