@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         intervalButton.setText(timeValue + " " + timeUnit);
 
         Intent intent = getIntent();
-        if (intent.getBooleanExtra("fromService", false)) {
+        if (intent.getBooleanExtra("fromService", false) || isMyServiceRunning(PeriodicLockService.class)) {
             enableSwitch.setChecked(true);
         }
 
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     timeValue = Integer.parseInt(timeValueString);
 
-                    if (timeUnit == "Minutes") {
+                    if (timeUnit.equals("Minutes")) {
                         timeValueSeconds = timeValue * 60;
                     } else {
                         timeValueSeconds = timeValue;
@@ -205,5 +205,17 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    // checks if the service is already running
+    // source: https://stackoverflow.com/questions/600207/how-to-check-if-a-service-is-running-on-android by geekQ
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        for (ActivityManager.RunningServiceInfo service : activityManager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
