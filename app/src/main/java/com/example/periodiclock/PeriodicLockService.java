@@ -94,7 +94,7 @@ public class PeriodicLockService extends Service {
     private Notification createNotification(String title, String content, PendingIntent pendingIntent) {
         mBuilder.setContentTitle(title)
                 .setContentText(content)
-                .setSmallIcon(R.drawable.ic_android)
+                .setSmallIcon(R.drawable.ic_lock_icon)
                 .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true);
         return mBuilder.build();
