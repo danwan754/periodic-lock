@@ -172,30 +172,28 @@ public class MainActivity extends AppCompatActivity {
                     timeValue = Integer.parseInt(timeValueString);
 
                     if (timeUnit.equals("Minutes")) {
-                        Log.d("Trigger", "Minutes");
                         if (timeValue > maxMinutes) {
                             timeValue = maxMinutes;
                         }
                         timeValueSeconds = timeValue * 60;
                     }
                     else if (timeUnit.equals("Seconds")) {
-                        Log.d("Trigger", "Seconds");
                         if (timeValue > maxSeconds) {
                             timeValue = maxSeconds;
                         }
                         timeValueSeconds = timeValue;
                     }
                     else {
-                        Log.d("Trigger", "Hours");
                         if (timeValue > maxHours) {
                             timeValue = maxHours;
                         }
                         timeValueSeconds = timeValue * 3600;
                     }
                 }
-                Log.d("timeUnit",": " + timeUnit);
-                Log.d("timeValue", ": " + timeValue);
-                Log.d("timeValueSeconds", ": " + timeValueSeconds);
+//                Log.d("timeUnit",": " + timeUnit);
+//                Log.d("timeValue", ": " + timeValue);
+//                Log.d("timeValueSeconds", ": " + timeValueSeconds);
+
                 intervalButton.setText(timeValue + " " + timeUnit);
 
                 // store timeValue and timeUnit in sharedPreferences
