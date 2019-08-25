@@ -31,6 +31,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private int maxMinutes = 1440;
+    private int maxSeconds = 86400;
+    private int maxHours = 24;
+
     // timeValue may be in seconds or minutes
     private int timeValue;
     private int timeValueSeconds;
@@ -123,8 +127,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         List<String> units = new ArrayList<String>();
-        units.add("Minutes");
         units.add("Seconds");
+        units.add("Minutes");
+        units.add("Hours");
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, units);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -154,20 +159,43 @@ public class MainActivity extends AppCompatActivity {
                         // minimal of 20 seconds if time unit is in seconds
                         timeValue = 20;
                         timeValueSeconds = 20;
-                    } else {
+                    } else if (timeUnit.equals("Minutes")){
                         // minimal of 1 minute of time unit is in minutes
                         timeValue = 1;
                         timeValueSeconds = 60;
+                    } else {
+                        // minimum of 1 hour if time unit is in hours
+                        timeValue = 1;
+                        timeValueSeconds = 3600;
                     }
                 } else {
                     timeValue = Integer.parseInt(timeValueString);
 
                     if (timeUnit.equals("Minutes")) {
+                        Log.d("Trigger", "Minutes");
+                        if (timeValue > maxMinutes) {
+                            timeValue = maxMinutes;
+                        }
                         timeValueSeconds = timeValue * 60;
-                    } else {
+                    }
+                    else if (timeUnit.equals("Seconds")) {
+                        Log.d("Trigger", "Seconds");
+                        if (timeValue > maxSeconds) {
+                            timeValue = maxSeconds;
+                        }
                         timeValueSeconds = timeValue;
                     }
+                    else {
+                        Log.d("Trigger", "Hours");
+                        if (timeValue > maxHours) {
+                            timeValue = maxHours;
+                        }
+                        timeValueSeconds = timeValue * 3600;
+                    }
                 }
+                Log.d("timeUnit",": " + timeUnit);
+                Log.d("timeValue", ": " + timeValue);
+                Log.d("timeValueSeconds", ": " + timeValueSeconds);
                 intervalButton.setText(timeValue + " " + timeUnit);
 
                 // store timeValue and timeUnit in sharedPreferences
