@@ -2,6 +2,9 @@
 An Android app that periodically locks the phone screen for a given time interval.
 
 
+Available in the Play Store:  
+https://play.google.com/store/apps/details?id=com.danwan.periodiclock
+
 ## Simple to use
 1) Input time interval
 2) Toggle on
@@ -29,8 +32,8 @@ An Android app that periodically locks the phone screen for a given time interva
 
 ### Credits
 
-Screen locking tutorial:
+Screen locking tutorial:  
 https://medium.com/@ssaurel/creating-a-lock-screen-device-app-for-android-4ec6576b92e0
 
-Foreground service tutorial:
+Foreground service tutorial:  
 https://codinginflow.com/tutorials/android/foreground-service
