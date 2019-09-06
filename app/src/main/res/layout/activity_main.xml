@@ -34,22 +34,39 @@
         android:onClick="showIntervalDialog"
         android:text="1 minute" />
 
+    <TextView
+        android:id="@+id/activateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Activate" />
+
     <Switch
         android:id="@+id/enableSwitch"
-        android:layout_width="51dp"
-        android:layout_height="15dp"
+        android:layout_width="49dp"
+        android:layout_height="47dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="30dp"
         android:checked="false"
         android:saveEnabled="false"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
         android:textOff="OFF"
         android:textOn="ON" />
+
+    <TextView
+        android:id="@+id/secureTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90dp"
+        android:text="Secure" />
 
     <Switch
         android:id="@+id/secureSwitch"
         android:layout_width="53dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"/>
+        android:layout_marginTop="12dp"/>
+
 
 </LinearLayout>
