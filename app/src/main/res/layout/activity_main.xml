@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="56dp"
+        android:layout_marginBottom="50dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:textColor="#404040"
@@ -40,11 +40,16 @@
         android:layout_height="15dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="180dp"
+        android:layout_marginTop="30dp"
         android:checked="false"
         android:saveEnabled="false"
         android:textOff="OFF"
         android:textOn="ON" />
+
+    <Switch
+        android:id="@+id/secureSwitch"
+        android:layout_width="53dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"/>
 
 </LinearLayout>
