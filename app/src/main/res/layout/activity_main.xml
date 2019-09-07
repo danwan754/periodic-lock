@@ -12,9 +12,6 @@
         android:id="@+id/IntervalTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="12dp"
         android:text="Interval"
         android:textSize="18sp" />
@@ -23,8 +20,6 @@
         android:id="@+id/intervalButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="50dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
@@ -43,14 +38,12 @@
     <Switch
         android:id="@+id/enableSwitch"
         android:layout_width="49dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="8dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
         android:checked="false"
         android:saveEnabled="false"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
+        android:scaleX="2"
+        android:scaleY="2"
         android:textOff="OFF"
         android:textOn="ON" />
 
