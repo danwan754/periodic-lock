@@ -6,6 +6,7 @@ import android.app.KeyguardManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
@@ -17,6 +18,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -128,6 +130,26 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.help_option:
+                Toast.makeText(getApplicationContext(), "Help Selected", Toast.LENGTH_LONG).show();
+                displayHelp();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     public void startService() {
         Intent serviceIntent = new Intent(this, PeriodicLockService.class);
@@ -139,6 +161,26 @@ public class MainActivity extends AppCompatActivity {
     public void stopService() {
         Intent serviceIntent = new Intent(this, PeriodicLockService.class);
         stopService(serviceIntent);
+    }
+
+    public void displayHelp() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogueLayout = inflater.inflate(R.layout.help_dialog, null);
+        builder.setView(dialogueLayout);
+
+        final AlertDialog dialog = builder.show();
+
+        // hide the default rectangular container of the dialog
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        Button cancelButton = dialogueLayout.findViewById(R.id.cancel_button);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
     }
 
     public void showIntervalDialog(View view) {
