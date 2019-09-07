@@ -26,7 +26,8 @@
         android:textColor="#404040"
         android:background="@drawable/button_interval"
         android:onClick="showIntervalDialog"
-        android:text="1 minute" />
+        android:inputType="textCapWords"
+        android:text="1 Minute" />
 
     <TextView
         android:id="@+id/activateTextView"
