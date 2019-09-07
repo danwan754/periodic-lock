@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private int timeValue;
     private int timeValueSeconds;
     private String timeUnit;
-    private boolean isDisableSecure;
+    private boolean isSecure;
     private SharedPreferences sharedPref;
 
     // is ready to start a new service
@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int RESULT_AUTHENTICATE_DISABLE_SERVICE = 22;
     public static final int RESULT_AUTHENTICATE_DISABLE_AUTHENTICATION = 33;
 
+    KeyguardManager keyguard_manager;
     DevicePolicyManager devicePolicyManager;
     ActivityManager activityManager;
     ComponentName compName;
@@ -67,18 +68,20 @@ public class MainActivity extends AppCompatActivity {
         timeValue = sharedPref.getInt(getString(R.string.time_value), 60);
         timeValueSeconds = sharedPref.getInt(getString(R.string.time_value_seconds), 60);
         timeUnit = sharedPref.getString(getString(R.string.time_unit), "Seconds");
-        isDisableSecure = sharedPref.getBoolean("is_disable_secure", false);
+        isSecure = sharedPref.getBoolean("is_secure", false);
 
         compName = new ComponentName(this, MyAdmin.class);
         devicePolicyManager = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
         activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        keyguard_manager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+
 
         final Switch enableSwitch = findViewById(R.id.enableSwitch);
         final Switch secureSwitch = findViewById(R.id.secureSwitch);
         Button intervalButton = findViewById(R.id.intervalButton);
 
         intervalButton.setText(timeValue + " " + timeUnit);
-        secureSwitch.setChecked(isDisableSecure);
+        secureSwitch.setChecked(isSecure);
 
         Intent intent = getIntent();
         if (intent.getBooleanExtra("fromService", false) || isMyServiceRunning(PeriodicLockService.class)) {
@@ -89,10 +92,10 @@ public class MainActivity extends AppCompatActivity {
         enableSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
             public void onCheckedChanged (CompoundButton buttonView, boolean isChecked) {
                 boolean active = devicePolicyManager.isAdminActive(compName);
-                if (active && isChecked) {
+                if (active && isChecked && isReady) {
                     isReady = false;
                     startService();
-                } else if (isChecked && !active){
+                } else if (isChecked && !active && isReady){
                     getLockPermissions();
                     if (active && isReady) {
                         isReady = false;
@@ -103,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 else if (!isChecked && !isReady) {
-                    if (isDisableSecure) {
+                    if (isSecure) {
                         verifyUnlock("disable_service", RESULT_AUTHENTICATE_DISABLE_SERVICE);
                     }
                     else {
@@ -118,9 +121,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    saveSecurePref(isChecked);
-                    isDisableSecure = true;
-//                    Toast.makeText(MainActivity.this, "Enabled authentication.", Toast.LENGTH_LONG).show();
+                    if (keyguard_manager.isKeyguardSecure()) {
+                        saveSecurePref(true);
+//                      Toast.makeText(MainActivity.this, "Enabled authentication.", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Toast.makeText(MainActivity.this, "Unable to secure. Please set up unlock credentials for your phone.", Toast.LENGTH_LONG).show();
+                        secureSwitch.setChecked(false);
+                    }
                 }
                 else {
                     verifyUnlock("disable_secure", RESULT_AUTHENTICATE_DISABLE_AUTHENTICATION);
@@ -307,19 +315,34 @@ public class MainActivity extends AppCompatActivity {
 
     public void verifyUnlock(String which_disable, int which_code) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            Toast.makeText(MainActivity.this, ">= LOLLIPOP", Toast.LENGTH_LONG).show();
-            KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
-
-            if (km.isKeyguardSecure()) {
+            if (keyguard_manager.isKeyguardSecure()) {
                 Intent authIntent;
                 if (which_disable.equals("disable_service")) {
-                    authIntent = km.createConfirmDeviceCredentialIntent("Disable Locking Service", "Disable periodic locking service.");
+                    authIntent = keyguard_manager.createConfirmDeviceCredentialIntent("Disable Locking Service", "Disable periodic locking service.");
                 }
                 else {
-                    authIntent = km.createConfirmDeviceCredentialIntent("Disable Authentication", "Disable authentication for disabling locking service.");
+                    authIntent = keyguard_manager.createConfirmDeviceCredentialIntent("Disable Authentication", "Disable authentication for disabling locking service.");
                 }
                 startActivityForResult(authIntent, which_code);
             }
+            else {
+                Toast.makeText(MainActivity.this, "Secure unsuccessful. Please set up unlock credentials for your phone.", Toast.LENGTH_LONG).show();
+                safeDisable(which_code);
+            }
+        }
+        else {
+            Toast.makeText(MainActivity.this, "Secure unsuccessful. Your Android version is not supported. Versions 5.0+ are supported.", Toast.LENGTH_LONG).show();
+            safeDisable(which_code);
+        }
+
+    }
+
+    private void safeDisable(int code) {
+        if (code == RESULT_AUTHENTICATE_DISABLE_SERVICE) {
+            disableService();
+        }
+        else if (code == RESULT_AUTHENTICATE_DISABLE_AUTHENTICATION) {
+            toggleAuthentication(false);
         }
     }
 
@@ -341,11 +364,12 @@ public class MainActivity extends AppCompatActivity {
         secureSwitch.setChecked(val);
     }
 
-    // store isDisableSecure in sharedPreferences
+    // store isSecure in sharedPreferences
     private void saveSecurePref(boolean val) {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean("is_disable_secure", val);
         editor.commit();
+        isSecure = val;
     }
 
     @Override
@@ -362,10 +386,10 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == RESULT_AUTHENTICATE_DISABLE_SERVICE) {
             if (resultCode == Activity.RESULT_OK) {
                 disableService();
-//                Toast.makeText(MainActivity.this, "Disabled periodic locking.", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Disabled periodic locking.", Toast.LENGTH_LONG).show();
             }
             else {
-//                Toast.makeText(MainActivity.this, "Failed authentication. Denied attempt to disable service.", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Failed authentication. Denied attempt to disable service.", Toast.LENGTH_LONG).show();
                 safeEnableService();
             }
         }
@@ -373,10 +397,10 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == RESULT_AUTHENTICATE_DISABLE_AUTHENTICATION) {
             if (resultCode == Activity.RESULT_OK) {
                 saveSecurePref(false);
-                isDisableSecure = false;
                 Toast.makeText(MainActivity.this, "Disabled authentication.", Toast.LENGTH_LONG).show();
             }
             else {
+                Toast.makeText(MainActivity.this, "Failed authentication. Denied attempt to disable authentication.", Toast.LENGTH_LONG).show();
                 toggleAuthentication(true);
             }
         }

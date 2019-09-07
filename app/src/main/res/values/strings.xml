@@ -18,9 +18,15 @@
         \n \u2022 86400 seconds
         \n \u2022 1440 minutes
         \n \u2022 24 hours
+
+        \n\nInputs that are lesser/greater than the min/max values will be overwritten with the min/max values.
     </string>
     <string name="activate_detail">Toggle ON to start up the periodic locking service. A notification will appear to display the time when the screen will lock. The service will continue to run even when the app is closed. Upon unlocking the screen, the next locking time will be set and displayed in the notification. Toggle OFF to stop the service.</string>
-    <string name="secure_detail">This feature will prevent unauthorized users from turning off the periodic locking service. Toggle ON to require keyguard authentication when attempting to toggle OFF the locking service. Attempting to toggle OFF this secure mode will also require keyguard authentication.</string>
+    <string name="secure_detail">This feature will prevent unauthorized users from turning off the periodic locking service.
+        Toggle ON to require keyguard authentication when attempting to toggle OFF the locking service.
+        Attempting to toggle OFF this secure mode will also require keyguard authentication.
+        If the phone has no unlock credentials set, then this feature cannot be enabled.
+    </string>
 
     <string name="help_back">Back</string>
 </resources>
