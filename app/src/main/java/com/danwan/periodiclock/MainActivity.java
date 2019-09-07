@@ -270,9 +270,6 @@ public class MainActivity extends AppCompatActivity {
                         timeValueSeconds = timeValue * 3600;
                     }
                 }
-//                Log.d("timeUnit",": " + timeUnit);
-//                Log.d("timeValue", ": " + timeValue);
-//                Log.d("timeValueSeconds", ": " + timeValueSeconds);
 
                 intervalButton.setText(timeValue + " " + timeUnit);
 
@@ -389,7 +386,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Disabled periodic locking.", Toast.LENGTH_LONG).show();
             }
             else {
-                Toast.makeText(MainActivity.this, "Failed authentication. Denied attempt to disable service.", Toast.LENGTH_LONG).show();
+//                Toast.makeText(MainActivity.this, "Failed authentication. Denied attempt to disable service.", Toast.LENGTH_LONG).show();
                 safeEnableService();
             }
         }
@@ -400,7 +397,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Disabled authentication.", Toast.LENGTH_LONG).show();
             }
             else {
-                Toast.makeText(MainActivity.this, "Failed authentication. Denied attempt to disable authentication.", Toast.LENGTH_LONG).show();
+//                Toast.makeText(MainActivity.this, "Failed authentication. Denied attempt to disable authentication.", Toast.LENGTH_LONG).show();
                 toggleAuthentication(true);
             }
         }
