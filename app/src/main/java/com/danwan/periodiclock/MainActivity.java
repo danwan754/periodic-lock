@@ -123,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
                 if (isChecked) {
                     if (keyguard_manager.isKeyguardSecure()) {
                         saveSecurePref(true);
-//                      Toast.makeText(MainActivity.this, "Enabled authentication.", Toast.LENGTH_LONG).show();
                     }
                     else {
                         Toast.makeText(MainActivity.this, "Unable to secure. Please set up unlock credentials for your phone.", Toast.LENGTH_LONG).show();
@@ -132,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     verifyUnlock("disable_secure", RESULT_AUTHENTICATE_DISABLE_AUTHENTICATION);
-//                    Toast.makeText(MainActivity.this, "secure off", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -364,7 +362,7 @@ public class MainActivity extends AppCompatActivity {
     // store isSecure in sharedPreferences
     private void saveSecurePref(boolean val) {
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean("is_disable_secure", val);
+        editor.putBoolean("is_secure", val);
         editor.commit();
         isSecure = val;
     }
@@ -386,7 +384,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Disabled periodic locking.", Toast.LENGTH_LONG).show();
             }
             else {
-//                Toast.makeText(MainActivity.this, "Failed authentication. Denied attempt to disable service.", Toast.LENGTH_LONG).show();
                 safeEnableService();
             }
         }
@@ -397,7 +394,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Disabled authentication.", Toast.LENGTH_LONG).show();
             }
             else {
-//                Toast.makeText(MainActivity.this, "Failed authentication. Denied attempt to disable authentication.", Toast.LENGTH_LONG).show();
                 toggleAuthentication(true);
             }
         }
